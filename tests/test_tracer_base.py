@@ -1,5 +1,5 @@
 from morfosi.registry import Registry
-from morfosi.tracer import Tracer
+from morfosi.tracing import traceable
 
 from .utils import assert_add, assert_change, assert_delete
 
@@ -11,7 +11,7 @@ class Example:
 
 def test_tracer_class_property_value_change():
     registry = Registry()
-    obj = Tracer(Example(), registry=registry)
+    obj = traceable(Example(), registry=registry)
 
     obj.prop = "changed"
 
@@ -21,7 +21,7 @@ def test_tracer_class_property_value_change():
 
 def test_tracer_class_property_multiple_changes():
     registry = Registry()
-    obj = Tracer(Example(), registry=registry)
+    obj = traceable(Example(), registry=registry)
 
     obj.prop = "changed"
     obj.prop = "another"
@@ -33,17 +33,17 @@ def test_tracer_class_property_multiple_changes():
 
 def test_tracer_class_new_property():
     registry = Registry()
-    obj = Tracer(Example(), registry=registry)
+    obj = traceable(Example(), registry=registry)
 
-    obj.another = "another"
+    obj.another = "another"  # type: ignore
 
-    assert obj.another == "another"
+    assert obj.another == "another"  # type: ignore
     assert_add(registry.changes[0], ["another"], "another")
 
 
 def test_tracer_class_delete_property():
     registry = Registry()
-    obj = Tracer(Example(), registry=registry)
+    obj = traceable(Example(), registry=registry)
 
     assert "prop" in obj.__dict__
 

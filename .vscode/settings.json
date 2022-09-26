@@ -3,5 +3,6 @@
   "python.formatting.provider": "black",
   "python.autoComplete.extraPaths": [
     "${workspaceFolder}/morfosi"
-  ]
+  ],
+  "python.analysis.typeCheckingMode": "strict"
 }

@@ -1,13 +1,13 @@
 from typing import List
 
-from .schema import Change
+from .schema import Action
 
 
 class Registry:
     def __init__(self) -> None:
-        self.changes: List[Change] = []
+        self.changes: List[Action] = []
 
-    def append(self, change: Change) -> None:
+    def append(self, change: Action) -> None:
         self.changes.append(change)
 
 

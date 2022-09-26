@@ -1,17 +1,19 @@
 from dataclasses import dataclass
-from typing import Any, List
+from typing import Any, List, Union
+
+Path = List[Union[str, int]]
 
 
 @dataclass(frozen=True)
 class Add:
-    path: List[str]
+    path: Path
     new_value: Any
     stack: str
 
 
 @dataclass(frozen=True)
 class Change:
-    path: List[str]
+    path: Path
     old_value: Any
     new_value: Any
     stack: str
@@ -19,6 +21,9 @@ class Change:
 
 @dataclass(frozen=True)
 class Delete:
-    path: List[str]
+    path: Path
     old_value: Any
     stack: str
+
+
+Action = Union[Add, Change, Delete]
