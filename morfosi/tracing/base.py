@@ -3,17 +3,22 @@ from typing import Any, Optional
 import wrapt
 
 from morfosi.registry import DEFAULT_REGISTRY, Registry
-from morfosi.schema import Path
+from morfosi.schema import TracerOptions, Path
 
 
 class BaseTracer(wrapt.ObjectProxy):
     def __init__(
-        self, wrapped: Any, registry: Optional[Registry] = None, path: Path = []
+        self,
+        wrapped: Any,
+        registry: Optional[Registry] = None,
+        path: Path = [],
+        options: TracerOptions = TracerOptions(),
     ):
         super().__init__(wrapped)
 
         self._self_tracer_registry = registry if registry else DEFAULT_REGISTRY
         self._self_tracer_path = path
+        self._self_tracer_options = options
 
     def resolve_path(self, name: str) -> Path:
         if len(self._self_tracer_path) > 0:

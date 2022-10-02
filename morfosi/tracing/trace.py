@@ -1,7 +1,7 @@
-from typing import List, Optional, TypeVar, cast
+from typing import Optional, TypeVar, cast
 
 from morfosi.registry import Registry
-from morfosi.schema import Path
+from morfosi.schema import Path, TracerOptions
 from morfosi.tracing.class_tracer import ClassTracer
 from morfosi.tracing.utils import is_primitive
 from morfosi.tracing.dict_tracer import DictTracer
@@ -9,7 +9,12 @@ from morfosi.tracing.dict_tracer import DictTracer
 T = TypeVar("T")
 
 
-def traceable(obj: T, registry: Optional[Registry] = None, path: Path = []) -> T:
+def traceable(
+    obj: T,
+    registry: Optional[Registry] = None,
+    path: Path = [],
+    options: TracerOptions = TracerOptions(),
+) -> T:
     if isinstance(obj, list):
         # TODO
         pass

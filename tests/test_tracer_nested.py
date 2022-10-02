@@ -67,9 +67,10 @@ def test_tracer_nested_class_new_nested_property():
     registry = Registry()
     obj = traceable(Example(), registry=registry)
 
-    obj.another_nested = Nested()  # type: ignore
+    nested = Nested()
+    obj.another_nested = nested  # type: ignore
     obj.another_nested.field = "changed"  # type: ignore
 
     assert obj.another_nested.field == "changed"  # type: ignore
-    assert_add(registry.changes[0], ["another_nested"], Nested())
+    assert_add(registry.changes[0], ["another_nested"], nested)
     assert_change(registry.changes[1], ["another_nested", "field"], "nested", "changed")

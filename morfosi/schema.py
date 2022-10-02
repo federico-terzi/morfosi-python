@@ -1,3 +1,4 @@
+import enum
 from dataclasses import dataclass
 from typing import Any, List, Union
 
@@ -27,3 +28,18 @@ class Delete:
 
 
 Action = Union[Add, Change, Delete]
+
+
+class ValueSnapshotStrategy(enum.Enum):
+    STRING = "string"
+    # TODO: others json, deep_string, deep_json
+
+
+@dataclass(frozen=True)
+class TracerOptions:
+    value_snapshot_strategy: ValueSnapshotStrategy = ValueSnapshotStrategy.STRING
+
+
+@dataclass(frozen=True)
+class Options:
+    tracer: TracerOptions = TracerOptions()
