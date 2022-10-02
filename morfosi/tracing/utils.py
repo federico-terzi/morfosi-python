@@ -8,4 +8,4 @@ def is_primitive(obj: Any) -> bool:
 
 
 def is_morfosi_builtin(field_name: str) -> bool:
-    return field_name.startswith("_tracer_")
+    return field_name.startswith("_self_tracer_")

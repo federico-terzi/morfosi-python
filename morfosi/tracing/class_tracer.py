@@ -27,24 +27,30 @@ class ClassTracer(BaseTracer):
 
         path = self.resolve_path(name)
         stack = self.resolve_stack()
+        wrapped: object = self.__wrapped__  # type: ignore
 
-        if name in self.__dict__:
+        if name in wrapped.__dict__:
             action = Change(
-                path=path, old_value=self.__dict__[name], new_value=value, stack=stack
+                path=path,
+                old_value=wrapped.__dict__[name],
+                new_value=value,
+                stack=stack,
             )
         else:
             action = Add(path=path, new_value=value, stack=stack)
 
-        self.__dict__["_tracer_registry"].append(action)
+        self._self_tracer_registry.append(action)
 
         return super().__setattr__(name, value)  # type: ignore
 
     def __delattr__(self, name: str):
         path = self.resolve_path(name)
         stack = self.resolve_stack()
-        old_value = self.__dict__.get(name)
 
-        self.__dict__["_tracer_registry"].append(
+        wrapped: object = self.__wrapped__  # type: ignore
+        old_value = wrapped.__dict__.get(name)
+
+        self._self_tracer_registry.append(
             Delete(path=path, old_value=old_value, stack=stack)
         )
 

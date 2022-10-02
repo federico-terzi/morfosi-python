@@ -6,7 +6,6 @@ from .utils import assert_add, assert_change, assert_delete
 
 class Example:
     def __init__(self) -> None:
-        self.nested_dict = {"foo": "bar"}
         self.nested_class = Nested()
 
 

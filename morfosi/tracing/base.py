@@ -12,12 +12,12 @@ class BaseTracer(wrapt.ObjectProxy):
     ):
         super().__init__(wrapped)
 
-        self._tracer_registry = registry if registry else DEFAULT_REGISTRY
-        self._tracer_path = path
+        self._self_tracer_registry = registry if registry else DEFAULT_REGISTRY
+        self._self_tracer_path = path
 
     def resolve_path(self, name: str) -> Path:
-        if len(self._tracer_path) > 0:
-            return self._tracer_path + [name]
+        if len(self._self_tracer_path) > 0:
+            return self._self_tracer_path + [name]
         else:
             return [name]
 
