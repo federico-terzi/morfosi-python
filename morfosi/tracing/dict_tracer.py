@@ -4,6 +4,7 @@ from morfosi.schema import Change, Add, Delete, Path
 from morfosi.registry import Registry
 from morfosi.tracing.base import BaseTracer
 from morfosi.tracing.utils import is_primitive, is_morfosi_builtin
+from morfosi.tracing.snapshot import snapshot
 
 
 class DictTracer(BaseTracer):
@@ -28,10 +29,18 @@ class DictTracer(BaseTracer):
 
         if key in wrapped:
             action = Change(
-                path=path, old_value=wrapped[key], new_value=value, stack=stack
+                path=path,
+                old_value=snapshot(wrapped[key]),
+                new_value=snapshot(value),
+                stack=stack,
             )
         else:
-            action = Add(path=path, new_value=value, stack=stack)
+            action = Add(path=path, new_value=snapshot(value), stack=stack)
+
+        if not is_primitive(value):
+            from morfosi.tracing.trace import traceable
+
+            value = traceable(value, registry=self._self_tracer_registry, path=path)
 
         self._self_tracer_registry.append(action)
 
@@ -45,7 +54,7 @@ class DictTracer(BaseTracer):
         old_value = wrapped.get(key)
 
         self._self_tracer_registry.append(
-            Delete(path=path, old_value=old_value, stack=stack)
+            Delete(path=path, old_value=snapshot(old_value), stack=stack)
         )
 
         return super().__delitem__(key)  # type: ignore

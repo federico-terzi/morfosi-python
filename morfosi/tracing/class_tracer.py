@@ -4,6 +4,7 @@ from morfosi.schema import Change, Add, Delete, Path
 from morfosi.registry import Registry
 from morfosi.tracing.base import BaseTracer
 from morfosi.tracing.utils import is_primitive, is_morfosi_builtin
+from morfosi.tracing.snapshot import snapshot
 
 
 class ClassTracer(BaseTracer):
@@ -32,14 +33,19 @@ class ClassTracer(BaseTracer):
         if name in wrapped.__dict__:
             action = Change(
                 path=path,
-                old_value=wrapped.__dict__[name],
-                new_value=value,
+                old_value=snapshot(wrapped.__dict__[name]),
+                new_value=snapshot(value),
                 stack=stack,
             )
         else:
-            action = Add(path=path, new_value=value, stack=stack)
+            action = Add(path=path, new_value=snapshot(value), stack=stack)
 
         self._self_tracer_registry.append(action)
+
+        if not is_primitive(value):
+            from morfosi.tracing.trace import traceable
+
+            value = traceable(value, registry=self._self_tracer_registry, path=path)
 
         return super().__setattr__(name, value)  # type: ignore
 
@@ -51,7 +57,7 @@ class ClassTracer(BaseTracer):
         old_value = wrapped.__dict__.get(name)
 
         self._self_tracer_registry.append(
-            Delete(path=path, old_value=old_value, stack=stack)
+            Delete(path=path, old_value=snapshot(old_value), stack=stack)
         )
 
         return super().__delattr__(name)  # type: ignore

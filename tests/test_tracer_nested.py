@@ -13,6 +13,11 @@ class Nested:
     def __init__(self) -> None:
         self.field = "nested"
 
+    def __eq__(self, __o: object) -> bool:
+        if not isinstance(__o, Nested):
+            return False
+        return self.field == __o.field
+
 
 def test_tracer_nested_class_change_property():
     registry = Registry()
@@ -56,3 +61,15 @@ def test_tracer_nested_class_delete_property():
 
     assert "field" not in obj.nested_class.__dict__
     assert_delete(registry.changes[0], ["nested_class", "field"], "nested")
+
+
+def test_tracer_nested_class_new_nested_property():
+    registry = Registry()
+    obj = traceable(Example(), registry=registry)
+
+    obj.another_nested = Nested()  # type: ignore
+    obj.another_nested.field = "changed"  # type: ignore
+
+    assert obj.another_nested.field == "changed"  # type: ignore
+    assert_add(registry.changes[0], ["another_nested"], Nested())
+    assert_change(registry.changes[1], ["another_nested", "field"], "nested", "changed")
