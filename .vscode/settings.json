@@ -7,5 +7,10 @@
   "python.analysis.typeCheckingMode": "strict",
   "python.analysis.extraPaths": [
     "${workspaceFolder}/morfosi"
-  ]
+  ],
+  "python.testing.pytestArgs": [
+    "tests"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true
 }
