@@ -1,5 +1,5 @@
 import traceback
-from typing import Any, Optional
+from typing import Any, Optional, Union
 import wrapt
 
 from morfosi.registry import DEFAULT_REGISTRY, Registry
@@ -20,7 +20,7 @@ class BaseTracer(wrapt.ObjectProxy):
         self._self_tracer_path = path
         self._self_tracer_options = options
 
-    def resolve_path(self, name: str) -> Path:
+    def resolve_path(self, name: Union[str, int]) -> Path:
         if len(self._self_tracer_path) > 0:
             return self._self_tracer_path + [name]
         else:
