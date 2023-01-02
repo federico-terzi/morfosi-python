@@ -1,0 +1,27 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=61.0.0", "wheel"]
+
+[project]
+authors = [{name = "Federico Terzi", email = "federicoterzi96@gmail.com"}]
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+]
+dependencies = [
+  "wrapt >= 1.13.3",
+]
+description = "An experimental library for mutation tracing in Python"
+keywords = ["mutation", "tracing", "debug"]
+license = {file = "LICENSE"}
+name = "pymorfosi"
+readme = "README.md"
+requires-python = ">=3.8"
+version = "1.0.1"
+
+[project.optional-dependencies]
+dev = ["black", "pytest"]
+
+[project.urls]
+Homepage = "https://github.com/federico-terzi/morfosi-python"
