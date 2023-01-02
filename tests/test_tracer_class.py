@@ -51,3 +51,13 @@ def test_tracer_class_delete_property():
 
     assert "prop" not in obj.__dict__
     assert_delete(registry.changes[0], ["prop"], "value")
+
+
+def test_tracer_class_property_none_value():
+    registry = Registry()
+    obj = traceable(Example(), registry=registry)
+
+    obj.prop = None  # type: ignore
+
+    assert obj.prop is None
+    assert_change(registry.changes[0], ["prop"], "value", None)

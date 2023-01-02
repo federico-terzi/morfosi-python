@@ -4,6 +4,8 @@ PRIMITIVE_TYPES = (int, str, bool, float)
 
 
 def is_primitive(obj: Any) -> bool:
+    if obj is None:
+        return True
     return type(obj) in PRIMITIVE_TYPES
 
 
